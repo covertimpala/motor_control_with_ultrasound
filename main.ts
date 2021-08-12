@@ -1,22 +1,29 @@
 let Rand_movement = 0
 let Rand_time = 0
-let Distance = 0
 input.onButtonPressed(Button.A, function () {
     basic.showString("A")
-    pins.digitalWritePin(DigitalPin.P0, 0)
-    pins.digitalWritePin(DigitalPin.P1, 1)
-    basic.pause(1500)
-    pins.digitalWritePin(DigitalPin.P0, 0)
-    pins.digitalWritePin(DigitalPin.P1, 0)
+    while (pins.digitalReadPin(DigitalPin.P0) == 0) {
+        pins.digitalWritePin(DigitalPin.P0, 0)
+        pins.digitalWritePin(DigitalPin.P1, 1)
+    }
+    if (pins.digitalReadPin(DigitalPin.P2) == 1) {
+        pins.digitalWritePin(DigitalPin.P0, 0)
+        pins.digitalWritePin(DigitalPin.P1, 0)
+        basic.clearScreen()
+    }
     basic.clearScreen()
 })
 input.onButtonPressed(Button.B, function () {
     basic.showString("B")
-    pins.digitalWritePin(DigitalPin.P0, 1)
-    pins.digitalWritePin(DigitalPin.P1, 0)
-    basic.pause(1500)
-    pins.digitalWritePin(DigitalPin.P0, 0)
-    pins.digitalWritePin(DigitalPin.P1, 0)
+    while (pins.digitalReadPin(DigitalPin.P2) == 0) {
+        pins.digitalWritePin(DigitalPin.P0, 1)
+        pins.digitalWritePin(DigitalPin.P1, 0)
+    }
+    if (pins.digitalReadPin(DigitalPin.P2) == 1) {
+        pins.digitalWritePin(DigitalPin.P0, 0)
+        pins.digitalWritePin(DigitalPin.P1, 0)
+        basic.clearScreen()
+    }
     basic.clearScreen()
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
@@ -42,11 +49,15 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     }
 })
 basic.forever(function () {
-    Distance = sonar.ping(
-    DigitalPin.P16,
-    DigitalPin.P2,
-    PingUnit.Centimeters
-    )
-    basic.showNumber(Distance)
-    basic.pause(1000)
+    if (pins.digitalReadPin(DigitalPin.P2) == 1) {
+        basic.showLeds(`
+            # # # # #
+            . # # # .
+            . . . . .
+            . . # . .
+            # # # # #
+            `)
+        basic.pause(1000)
+        basic.clearScreen()
+    }
 })
